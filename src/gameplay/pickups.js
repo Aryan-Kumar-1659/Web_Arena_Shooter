@@ -147,29 +147,30 @@ export class Pickup {
 
     ctx.save();
     if (sprite && sprite.complete && sprite.naturalWidth !== 0) {
-      const size = this.radius * 2.2;
+      const size = this.radius * 3.5;
       ctx.drawImage(sprite, this.x - size / 2, drawY - size / 2, size, size);
     } else {
       // Safe Primitive Fallback
+      const r = this.radius * 1.4;
       ctx.beginPath();
-      ctx.arc(this.x, drawY, this.radius, 0, Math.PI * 2);
+      ctx.arc(this.x, drawY, r, 0, Math.PI * 2);
       ctx.fillStyle = this.fallbackColor;
       ctx.fill();
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 2.5;
       ctx.strokeStyle = '#ffffff';
       ctx.stroke();
 
       if (this.type === 'health') {
         // White Plus Sign
         ctx.fillStyle = '#ffffff';
-        const crossSize = this.radius * 0.6;
-        const thickness = Math.max(2, this.radius * 0.25);
+        const crossSize = r * 0.65;
+        const thickness = Math.max(3, r * 0.25);
         ctx.fillRect(this.x - crossSize / 2, drawY - thickness / 2, crossSize, thickness);
         ctx.fillRect(this.x - thickness / 2, drawY - crossSize / 2, thickness, crossSize);
       } else {
         // Ammo Marker
         ctx.fillStyle = '#ffffff';
-        ctx.font = `bold ${Math.floor(this.radius * 1.1)}px sans-serif`;
+        ctx.font = `bold ${Math.floor(r * 1.1)}px sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         if (typeof ctx.fillText === 'function') {
