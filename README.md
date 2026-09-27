@@ -69,7 +69,9 @@ npm run build
 | **Move** | <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> or <kbd>↑</kbd> <kbd>←</kbd> <kbd>↓</kbd> <kbd>→</kbd> |
 | **Aim** | Move the **Mouse** cursor |
 | **Fire** | **Left Mouse Click** |
-| **Start / Restart** | Click anywhere on the canvas |
+| **Switch Weapon** | <kbd>1</kbd> (Rifle) / <kbd>2</kbd> (Shotgun) |
+| **Reload** | <kbd>R</kbd> |
+| **Start / Restart** | <kbd>Space</kbd> / <kbd>Enter</kbd> / Click on canvas |
 
 ---
 
