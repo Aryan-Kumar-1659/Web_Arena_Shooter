@@ -3,12 +3,11 @@
 ## 1. Team Structure
 Four members own separate but connected modules. Each member has a recognizable technical contribution and a defined integration boundary.
 
-| Member | Role | Difficulty | Branch |
-|---|---|---|---|
-| **1** | Team Lead + Core Engine + Player | Highest | `lead-core-player` |
-| **2** | Weapons + Combat Developer | Medium | `weapons-combat` |
-| **3** | Enemies + Gameplay Developer | Medium-Hard | `enemies-gameplay` |
-| **4** | UI + Audio + Asset/QA Developer | Medium | `ui-audio-qa` |
+| Member | Role | Difficulty | Branch | Assignee |
+|---|---|---|---|---|
+| **1** | Team Lead + Core Engine + Player | Highest | `Aryan/Lead` | Aryan |
+| **2 & 4** | Weapons + Combat & UI + Audio + Asset/QA | High | `aarish/weapons-combat` | Aarish |
+| **3** | Enemies + Gameplay Developer | Medium-Hard | `divyansh/enemies-gameplay` | Divyansh |
 
 ---
 
