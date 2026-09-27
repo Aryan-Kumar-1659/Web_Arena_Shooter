@@ -193,40 +193,45 @@ export class GameLoop {
    * @private
    */
   _renderBackground(ctx, width, height) {
-    let floorDrawn = false;
+    // 1. Deep solid dark sci-fi base
+    ctx.fillStyle = '#0b0f19';
+    ctx.fillRect(0, 0, width, height);
+
+    // 2. Subtle sci-fi grid
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 1;
+    const gridSize = 40;
+
+    ctx.beginPath();
+    for (let x = 0; x <= width; x += gridSize) {
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, height);
+    }
+    for (let y = 0; y <= height; y += gridSize) {
+      ctx.moveTo(0, y);
+      ctx.lineTo(width, y);
+    }
+    ctx.stroke();
+
+    // 3. Optional arena floor texture
     if (this.assetLoader && typeof this.assetLoader.getImage === 'function') {
       const floorImg = this.assetLoader.getImage('arena_floor.png');
       if (floorImg && floorImg.complete && floorImg.naturalWidth > 0) {
+        ctx.save();
+        ctx.globalAlpha = 0.85;
         ctx.drawImage(floorImg, 0, 0, width, height);
-        floorDrawn = true;
+        ctx.restore();
       }
     }
 
-    if (!floorDrawn) {
-      ctx.fillStyle = '#111827';
-      ctx.fillRect(0, 0, width, height);
-
-      // Subtle arena grid
-      ctx.strokeStyle = '#1f2937';
-      ctx.lineWidth = 1;
-      const gridSize = 40;
-
-      ctx.beginPath();
-      for (let x = 0; x <= width; x += gridSize) {
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, height);
-      }
-      for (let y = 0; y <= height; y += gridSize) {
-        ctx.moveTo(0, y);
-        ctx.lineTo(width, y);
-      }
-      ctx.stroke();
-    }
-
-    // Arena boundary border
+    // 4. Arena boundary walls with sleek glowing border
+    ctx.save();
     ctx.lineWidth = 4;
-    ctx.strokeStyle = '#374151';
+    ctx.strokeStyle = '#0284c7';
+    ctx.shadowColor = 'rgba(2, 132, 199, 0.4)';
+    ctx.shadowBlur = 8;
     ctx.strokeRect(2, 2, width - 4, height - 4);
+    ctx.restore();
   }
 
   /**
