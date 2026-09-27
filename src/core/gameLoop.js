@@ -189,28 +189,39 @@ export class GameLoop {
   }
 
   /**
-   * Render grid arena floor background.
+   * Render arena floor and boundaries.
    * @private
    */
   _renderBackground(ctx, width, height) {
-    ctx.fillStyle = '#111827';
-    ctx.fillRect(0, 0, width, height);
-
-    // Subtle arena grid
-    ctx.strokeStyle = '#1f2937';
-    ctx.lineWidth = 1;
-    const gridSize = 40;
-
-    ctx.beginPath();
-    for (let x = 0; x <= width; x += gridSize) {
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, height);
+    let floorDrawn = false;
+    if (this.assetLoader && typeof this.assetLoader.getImage === 'function') {
+      const floorImg = this.assetLoader.getImage('arena_floor.png');
+      if (floorImg && floorImg.complete && floorImg.naturalWidth > 0) {
+        ctx.drawImage(floorImg, 0, 0, width, height);
+        floorDrawn = true;
+      }
     }
-    for (let y = 0; y <= height; y += gridSize) {
-      ctx.moveTo(0, y);
-      ctx.lineTo(width, y);
+
+    if (!floorDrawn) {
+      ctx.fillStyle = '#111827';
+      ctx.fillRect(0, 0, width, height);
+
+      // Subtle arena grid
+      ctx.strokeStyle = '#1f2937';
+      ctx.lineWidth = 1;
+      const gridSize = 40;
+
+      ctx.beginPath();
+      for (let x = 0; x <= width; x += gridSize) {
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+      }
+      for (let y = 0; y <= height; y += gridSize) {
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+      }
+      ctx.stroke();
     }
-    ctx.stroke();
 
     // Arena boundary border
     ctx.lineWidth = 4;

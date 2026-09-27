@@ -10,12 +10,53 @@ import { InputManager } from './core/input.js';
 import { Player } from './player/player.js';
 import { PlayerController } from './player/playerController.js';
 
-function initGame() {
+/**
+ * Lightweight standalone asset helper for branch testing.
+ * Full asset loader system is owned and implemented by Member 4 in src/core/assetLoader.js.
+ */
+function createAssetProvider() {
+  const images = new Map();
+  const preload = (names) => {
+    return Promise.all(
+      names.map((name) => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.src = `assets/${name}`;
+          img.onload = () => {
+            images.set(name, img);
+            resolve(img);
+          };
+          img.onerror = () => {
+            // Safe fallback per CONTRACT.md
+            resolve(null);
+          };
+        });
+      })
+    );
+  };
+
+  return {
+    preload,
+    getImage: (name) => images.get(name) || null
+  };
+}
+
+async function initGame() {
   const canvas = document.getElementById('gameCanvas');
   if (!canvas) {
     console.error('Canvas element "#gameCanvas" not found.');
     return;
   }
+
+  // Preload initial player and arena assets for standalone verification
+  const assetProvider = createAssetProvider();
+  await assetProvider.preload([
+    'player_idle.png',
+    'player_walk_1.png',
+    'player_walk_2.png',
+    'player_shoot.png',
+    'arena_floor.png'
+  ]);
 
   const arenaBounds = {
     x: 0,
@@ -49,7 +90,8 @@ function initGame() {
     stateManager,
     input,
     player,
-    playerController
+    playerController,
+    assetLoader: assetProvider
   });
 
   // Simple canvas click handler for Start / Restart transitions
