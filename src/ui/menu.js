@@ -15,8 +15,8 @@ export class Menu {
   constructor(onStartGame = null) {
     this.onStartGame = onStartGame;
     this.startButton = {
-      x: 0,
-      y: 0,
+      x: 400,
+      y: 330,
       width: 200,
       height: 50
     };

@@ -16,8 +16,8 @@ export class GameOverScreen {
   constructor(onRestartGame = null) {
     this.onRestartGame = onRestartGame;
     this.restartButton = {
-      x: 0,
-      y: 0,
+      x: 400,
+      y: 370,
       width: 200,
       height: 50
     };

@@ -24,8 +24,10 @@
     }
     #game-container {
       position: relative;
-      width: 90vw;
-      height: 90vh;
+      width: 800px;
+      max-width: 95vw;
+      max-height: 85vh;
+      aspect-ratio: 4 / 3;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 200, 255, 0.2);
       border-radius: 8px;
       overflow: hidden;
@@ -61,7 +63,7 @@
     <canvas id="gameCanvas" width="800" height="600"></canvas>
   </div>
   <div class="instructions">
-    Movement: <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> or <kbd>Arrow Keys</kbd> &nbsp;|&nbsp; Aim: <kbd>Mouse</kbd> &nbsp;|&nbsp; Fire: <kbd>Left Click</kbd>
+    Movement: <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> or <kbd>Arrow Keys</kbd> &nbsp;|&nbsp; Aim: <kbd>Mouse</kbd> &nbsp;|&nbsp; Fire: <kbd>Left Click</kbd> &nbsp;|&nbsp; Start/Restart: <kbd>Space</kbd> / <kbd>Click</kbd>
   </div>
   <script type="module" src="./src/main.js"></script>
 </body>

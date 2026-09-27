@@ -163,9 +163,55 @@ async function initGame() {
     audioManager.handleEvent('game:over', payload);
   });
 
-  // Weapon Switch & Reload Controls
+  // Start/Restart transition trigger
+  const handleStartOrRestart = () => {
+    const currentState = stateManager.getState();
+    if (currentState.status === GAME_STATUS.MENU) {
+      audioManager.play('button_click');
+      menu.triggerStart();
+    } else if (currentState.status === GAME_STATUS.GAME_OVER) {
+      audioManager.play('button_click');
+      gameOverScreen.triggerRestart();
+    }
+  };
+
+  // Canvas Click Interactions (UI Buttons)
+  canvas.addEventListener('click', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / (rect.width || canvas.width);
+    const scaleY = canvas.height / (rect.height || canvas.height);
+    const clickX = (e.clientX - rect.left) * scaleX;
+    const clickY = (e.clientY - rect.top) * scaleY;
+    const currentState = stateManager.getState();
+
+    if (currentState.status === GAME_STATUS.MENU) {
+      if (menu.handleClick(clickX, clickY)) {
+        audioManager.play('button_click');
+      } else {
+        // Safe fallback: clicking canvas starts the game
+        handleStartOrRestart();
+      }
+    } else if (currentState.status === GAME_STATUS.GAME_OVER) {
+      if (gameOverScreen.handleClick(clickX, clickY)) {
+        audioManager.play('button_click');
+      } else {
+        handleStartOrRestart();
+      }
+    }
+  });
+
+  // Keyboard controls
   window.addEventListener('keydown', (e) => {
-    if (stateManager.getState().status !== GAME_STATUS.PLAYING) return;
+    const currentState = stateManager.getState();
+    if (currentState.status === GAME_STATUS.MENU && (e.code === 'Space' || e.code === 'Enter' || e.key === ' ' || e.key === 'Enter')) {
+      handleStartOrRestart();
+      return;
+    }
+    if (currentState.status === GAME_STATUS.GAME_OVER && (e.code === 'Space' || e.code === 'Enter' || e.key === ' ' || e.key === 'Enter')) {
+      handleStartOrRestart();
+      return;
+    }
+    if (currentState.status !== GAME_STATUS.PLAYING) return;
     if (e.key === '1') {
       weaponSystem.switchWeapon('rifle');
       stateManager.getState().weapon = weaponSystem.getState();
@@ -174,24 +220,6 @@ async function initGame() {
       stateManager.getState().weapon = weaponSystem.getState();
     } else if (e.key === 'r' || e.key === 'R') {
       weaponSystem.reload();
-    }
-  });
-
-  // Canvas Click Interactions (UI Buttons)
-  canvas.addEventListener('click', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const clickY = e.clientY - rect.top;
-    const currentState = stateManager.getState();
-
-    if (currentState.status === GAME_STATUS.MENU) {
-      if (menu.handleClick(clickX, clickY)) {
-        audioManager.play('button_click');
-      }
-    } else if (currentState.status === GAME_STATUS.GAME_OVER) {
-      if (gameOverScreen.handleClick(clickX, clickY)) {
-        audioManager.play('button_click');
-      }
     }
   });
 
