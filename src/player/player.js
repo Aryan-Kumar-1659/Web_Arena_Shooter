@@ -162,7 +162,7 @@ export class Player {
       const sprite = assetLoader.getImage(assetKey);
 
       if (sprite && sprite.complete && sprite.naturalWidth > 0) {
-        const size = this.radius * 3.8;
+        const size = this.radius * 5.2;
         ctx.drawImage(sprite, -size / 2, -size / 2, size, size);
         spriteDrawn = true;
       }
@@ -182,33 +182,33 @@ export class Player {
    * @param {CanvasRenderingContext2D} ctx
    */
   _renderPrimitive(ctx) {
-    const r = this.radius * 1.5;
+    const r = this.radius * 2.0;
 
     // Shadow
     ctx.beginPath();
-    ctx.arc(3, 3, r, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+    ctx.arc(4, 4, r, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
     ctx.fill();
 
     // Weapon / Barrel indicator
     ctx.fillStyle = '#475569';
-    ctx.fillRect(r * 0.3, -6, r * 1.0, 12);
+    ctx.fillRect(r * 0.3, -8, r * 1.1, 16);
     ctx.fillStyle = '#1e293b';
-    ctx.fillRect(r * 0.7, -4, r * 0.6, 8);
+    ctx.fillRect(r * 0.7, -5, r * 0.7, 10);
 
     // Player body
     ctx.beginPath();
     ctx.arc(0, 0, r, 0, Math.PI * 2);
     ctx.fillStyle = this.flashTimer > 0 ? '#ef4444' : '#3b82f6';
     ctx.fill();
-    ctx.lineWidth = 4;
+    ctx.lineWidth = 5;
     ctx.strokeStyle = '#1d4ed8';
     ctx.stroke();
 
     // Hands/shoulders
     ctx.beginPath();
-    ctx.arc(r * 0.5, -r * 0.5, 7, 0, Math.PI * 2);
-    ctx.arc(r * 0.5, r * 0.5, 7, 0, Math.PI * 2);
+    ctx.arc(r * 0.5, -r * 0.5, 9, 0, Math.PI * 2);
+    ctx.arc(r * 0.5, r * 0.5, 9, 0, Math.PI * 2);
     ctx.fillStyle = '#2563eb';
     ctx.fill();
     ctx.strokeStyle = '#1e40af';
@@ -220,7 +220,7 @@ export class Player {
     ctx.fillStyle = '#60a5fa';
     ctx.fill();
     ctx.strokeStyle = '#93c5fd';
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 2.5;
     ctx.stroke();
   }
 }

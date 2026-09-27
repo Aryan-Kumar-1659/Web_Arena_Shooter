@@ -167,7 +167,7 @@ export function renderBullet(bullet, ctx, bulletSprite = null) {
 
   if (bulletSprite && bulletSprite.complete && bulletSprite.naturalWidth !== 0) {
     const angle = Math.atan2(bullet.vy, bullet.vx);
-    const size = Math.max(bullet.radius * 5.0, 22);
+    const size = Math.max(bullet.radius * 8.0, 32);
 
     ctx.save();
     ctx.translate(bullet.x, bullet.y);
@@ -178,10 +178,10 @@ export function renderBullet(bullet, ctx, bulletSprite = null) {
     // Primitive fallback
     ctx.save();
     ctx.beginPath();
-    ctx.arc(bullet.x, bullet.y, Math.max(bullet.radius * 1.8, 7), 0, Math.PI * 2);
+    ctx.arc(bullet.x, bullet.y, Math.max(bullet.radius * 2.6, 10), 0, Math.PI * 2);
     ctx.fillStyle = '#ffeb3b';
     ctx.fill();
-    ctx.lineWidth = 1.5;
+    ctx.lineWidth = 2;
     ctx.strokeStyle = '#f57f17';
     ctx.stroke();
     ctx.restore();

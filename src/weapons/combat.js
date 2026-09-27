@@ -127,12 +127,12 @@ export function renderHitEffects(effects, ctx, hitSprite = null) {
     ctx.globalAlpha = alpha;
 
     if (hitSprite && hitSprite.complete && hitSprite.naturalWidth !== 0) {
-      const size = 32;
+      const size = 56;
       ctx.drawImage(hitSprite, effect.x - size / 2, effect.y - size / 2, size, size);
     } else {
       // Fallback hit flash
       ctx.beginPath();
-      ctx.arc(effect.x, effect.y, 8 * (1 - alpha + 0.5), 0, Math.PI * 2);
+      ctx.arc(effect.x, effect.y, 14 * (1 - alpha + 0.5), 0, Math.PI * 2);
       ctx.fillStyle = '#ff5722';
       ctx.fill();
     }

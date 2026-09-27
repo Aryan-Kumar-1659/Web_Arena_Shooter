@@ -196,26 +196,26 @@ export class Enemy {
     }
 
     if (sprite && sprite.complete && sprite.naturalWidth !== 0) {
-      const size = this.radius * 3.8;
+      const size = this.radius * 5.2;
       ctx.drawImage(sprite, -size / 2, -size / 2, size, size);
     } else {
       // Safe Primitive Fallback
-      const r = this.radius * 1.4;
+      const r = this.radius * 2.0;
       ctx.beginPath();
       ctx.arc(0, 0, r, 0, Math.PI * 2);
       ctx.fillStyle = this.fallbackColor;
       ctx.fill();
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 4;
       ctx.strokeStyle = '#2c3e50';
       ctx.stroke();
 
       // Direction indicator (eye / cannon)
       ctx.beginPath();
-      ctx.arc(r * 0.55, 0, Math.max(4, r * 0.25), 0, Math.PI * 2);
+      ctx.arc(r * 0.55, 0, Math.max(5, r * 0.25), 0, Math.PI * 2);
       ctx.fillStyle = '#ffffff';
       ctx.fill();
       ctx.beginPath();
-      ctx.arc(r * 0.65, 0, Math.max(2, r * 0.12), 0, Math.PI * 2);
+      ctx.arc(r * 0.65, 0, Math.max(2.5, r * 0.12), 0, Math.PI * 2);
       ctx.fillStyle = '#000000';
       ctx.fill();
     }
@@ -224,19 +224,19 @@ export class Enemy {
 
     // Mini Health Bar above enemy if wounded
     if (this.health < this.maxHealth) {
-      const barWidth = this.radius * 3.0;
-      const barHeight = 6;
+      const barWidth = this.radius * 4.0;
+      const barHeight = 8;
       const barX = this.x - barWidth / 2;
-      const barY = this.y - this.radius * 1.5 - 12;
+      const barY = this.y - this.radius * 2.0 - 16;
       const healthPct = Math.max(0, this.health / this.maxHealth);
 
       ctx.save();
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
       ctx.fillRect(barX, barY, barWidth, barHeight);
       ctx.fillStyle = healthPct > 0.5 ? '#2ecc71' : healthPct > 0.25 ? '#f39c12' : '#e74c3c';
       ctx.fillRect(barX, barY, barWidth * healthPct, barHeight);
       ctx.strokeStyle = '#1e293b';
-      ctx.lineWidth = 1;
+      ctx.lineWidth = 1.5;
       ctx.strokeRect(barX, barY, barWidth, barHeight);
       ctx.restore();
     }
