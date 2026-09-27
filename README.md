@@ -4,6 +4,9 @@ A lightweight browser-based 2D top-down arena shooter built with vanilla JavaScr
 
 ---
 
+<img width="1535" height="862" alt="image" src="https://github.com/user-attachments/assets/6d93a0e0-86d1-46f2-a837-f846825eef45" />
+
+
 ## 🚀 How to Run the Game
 
 You can run the game using any standard local static server. **No installation of `node_modules` is required to play!**
