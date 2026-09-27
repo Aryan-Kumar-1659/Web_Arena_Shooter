@@ -51,7 +51,7 @@ export class HUD {
   }
 
   /**
-   * Renders the complete HUD overlay onto the HTML5 Canvas with modern, high-contrast dark cards.
+   * Renders the complete HUD overlay onto the HTML5 Canvas scaled for 1080p.
    * 
    * @param {CanvasRenderingContext2D} ctx 
    * @param {object} gameState 
@@ -62,153 +62,180 @@ export class HUD {
     if (!ctx || !gameState || gameState.status !== 'PLAYING') return;
 
     const data = this.extractDisplayData(gameState);
-    const canvasW = ctx.canvas?.width || 800;
-    const canvasH = ctx.canvas?.height || 600;
+    const canvasW = ctx.canvas?.width || 1920;
+    const canvasH = ctx.canvas?.height || 1080;
 
-    ctx.save();
+    if (ctx.save) ctx.save();
 
     // Helper to draw clean rounded rectangles
-    const drawCard = (x, y, w, h, bg = 'rgba(15, 23, 42, 0.88)', border = '#334155', radius = 6) => {
-      ctx.beginPath();
-      ctx.roundRect ? ctx.roundRect(x, y, w, h, radius) : ctx.rect(x, y, w, h);
+    const drawCard = (x, y, w, h, bg = 'rgba(15, 23, 42, 0.90)', border = '#334155', radius = 8) => {
       ctx.fillStyle = bg;
-      ctx.fill();
-      if (border) {
-        ctx.strokeStyle = border;
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
+      if (ctx.beginPath && ctx.roundRect) {
+        ctx.beginPath();
+        ctx.roundRect(x, y, w, h, radius);
+        ctx.fill();
+        if (border && ctx.stroke) {
+          ctx.strokeStyle = border;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
+      } else if (ctx.fillRect) {
+        ctx.fillRect(x, y, w, h);
+        if (border && ctx.strokeRect) {
+          ctx.strokeStyle = border;
+          ctx.lineWidth = 2;
+          ctx.strokeRect(x, y, w, h);
+        }
       }
     };
 
     // 1. HEALTH PANEL (Top Left)
-    const cardX = 16;
-    const cardY = 16;
-    const cardW = 240;
-    const cardH = 38;
+    const cardX = 28;
+    const cardY = 24;
+    const cardW = 320;
+    const cardH = 50;
     drawCard(cardX, cardY, cardW, cardH);
 
     // Health Icon
     const healthIcon = assetLoader?.getImage('health_icon.png');
-    if (healthIcon && healthIcon.complete && healthIcon.naturalWidth !== 0) {
-      ctx.drawImage(healthIcon, cardX + 8, cardY + 8, 22, 22);
-    } else {
+    if (healthIcon && healthIcon.complete && healthIcon.naturalWidth !== 0 && ctx.drawImage) {
+      ctx.drawImage(healthIcon, cardX + 12, cardY + 11, 28, 28);
+    } else if (ctx.fillText) {
       ctx.fillStyle = '#ef4444';
-      ctx.font = 'bold 16px sans-serif';
-      ctx.fillText('❤', cardX + 10, cardY + 24);
+      ctx.font = 'bold 22px sans-serif';
+      ctx.fillText('❤', cardX + 14, cardY + 32);
     }
 
     // Health Bar Gauge
-    const barX = cardX + 36;
-    const barY = cardY + 9;
-    const barW = 190;
-    const barH = 20;
+    const barX = cardX + 48;
+    const barY = cardY + 12;
+    const barW = 256;
+    const barH = 26;
 
     // Bar Background
     ctx.fillStyle = '#1e293b';
-    ctx.beginPath();
-    ctx.roundRect ? ctx.roundRect(barX, barY, barW, barH, 4) : ctx.rect(barX, barY, barW, barH);
-    ctx.fill();
+    if (ctx.beginPath && ctx.roundRect) {
+      ctx.beginPath();
+      ctx.roundRect(barX, barY, barW, barH, 5);
+      ctx.fill();
+    } else if (ctx.fillRect) {
+      ctx.fillRect(barX, barY, barW, barH);
+    }
 
     // Bar Fill
     if (data.healthRatio > 0) {
       ctx.fillStyle = data.healthRatio > 0.5 ? '#10b981' : data.healthRatio > 0.25 ? '#f59e0b' : '#ef4444';
-      ctx.beginPath();
-      ctx.roundRect ? ctx.roundRect(barX, barY, barW * data.healthRatio, barH, 4) : ctx.rect(barX, barY, barW * data.healthRatio, barH);
-      ctx.fill();
+      if (ctx.beginPath && ctx.roundRect) {
+        ctx.beginPath();
+        ctx.roundRect(barX, barY, barW * data.healthRatio, barH, 5);
+        ctx.fill();
+      } else if (ctx.fillRect) {
+        ctx.fillRect(barX, barY, barW * data.healthRatio, barH);
+      }
     }
 
     // Health Bar Border & Text
-    ctx.strokeStyle = '#475569';
-    ctx.lineWidth = 1;
-    ctx.stroke();
+    if (ctx.stroke) {
+      ctx.strokeStyle = '#475569';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
 
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 11px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.shadowColor = 'rgba(0,0,0,0.8)';
-    ctx.shadowBlur = 3;
-    ctx.fillText(`HP: ${data.healthText}`, barX + barW / 2, barY + barH / 2);
-    ctx.shadowBlur = 0;
+    if (ctx.fillText) {
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 14px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.shadowColor = 'rgba(0,0,0,0.8)';
+      ctx.shadowBlur = 4;
+      ctx.fillText(`HP: ${data.healthText}`, barX + barW / 2, barY + barH / 2);
+      ctx.shadowBlur = 0;
+    }
 
     // 2. WAVE BANNER (Top Center)
-    const waveW = 150;
-    const waveH = 34;
+    const waveW = 200;
+    const waveH = 46;
     const waveX = (canvasW - waveW) / 2;
-    const waveY = 16;
-    drawCard(waveX, waveY, waveW, waveH, 'rgba(15, 23, 42, 0.92)', '#06b6d4', 8);
+    const waveY = 24;
+    drawCard(waveX, waveY, waveW, waveH, 'rgba(15, 23, 42, 0.94)', '#06b6d4', 10);
 
-    ctx.fillStyle = '#22d3ee';
-    ctx.font = '900 15px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(data.waveText, canvasW / 2, waveY + waveH / 2);
+    if (ctx.fillText) {
+      ctx.fillStyle = '#22d3ee';
+      ctx.font = '900 20px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(data.waveText, canvasW / 2, waveY + waveH / 2);
+    }
 
     // 3. SCORE PANEL (Top Right)
-    const scoreW = 180;
-    const scoreH = 38;
-    const scoreX = canvasW - scoreW - 16;
-    const scoreY = 16;
+    const scoreW = 240;
+    const scoreH = 50;
+    const scoreX = canvasW - scoreW - 28;
+    const scoreY = 24;
     drawCard(scoreX, scoreY, scoreW, scoreH);
 
     const scoreIcon = assetLoader?.getImage('score_icon.png');
-    if (scoreIcon && scoreIcon.complete && scoreIcon.naturalWidth !== 0) {
-      ctx.drawImage(scoreIcon, scoreX + 10, scoreY + 9, 20, 20);
-    } else {
+    if (scoreIcon && scoreIcon.complete && scoreIcon.naturalWidth !== 0 && ctx.drawImage) {
+      ctx.drawImage(scoreIcon, scoreX + 14, scoreY + 12, 26, 26);
+    } else if (ctx.fillText) {
       ctx.fillStyle = '#fbbf24';
-      ctx.font = 'bold 16px sans-serif';
+      ctx.font = 'bold 22px sans-serif';
       ctx.textAlign = 'left';
-      ctx.fillText('★', scoreX + 10, scoreY + 24);
+      ctx.fillText('★', scoreX + 14, scoreY + 32);
     }
 
-    ctx.textAlign = 'right';
-    ctx.textBaseline = 'middle';
-    ctx.font = 'bold 14px monospace';
-    ctx.fillStyle = '#f8fafc';
-    ctx.fillText(`SCORE: ${data.scoreText}`, scoreX + scoreW - 12, scoreY + scoreH / 2);
+    if (ctx.fillText) {
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      ctx.font = 'bold 18px monospace';
+      ctx.fillStyle = '#f8fafc';
+      ctx.fillText(`SCORE: ${data.scoreText}`, scoreX + scoreW - 16, scoreY + scoreH / 2);
+    }
 
     // 4. WEAPON & AMMO CARD (Bottom Right)
-    const weaponCardW = 190;
-    const weaponCardH = 60;
-    const weaponCardX = canvasW - weaponCardW - 16;
-    const weaponCardY = canvasH - weaponCardH - 16;
-    drawCard(weaponCardX, weaponCardY, weaponCardW, weaponCardH, 'rgba(15, 23, 42, 0.92)', '#334155', 6);
+    const weaponCardW = 250;
+    const weaponCardH = 80;
+    const weaponCardX = canvasW - weaponCardW - 28;
+    const weaponCardY = canvasH - weaponCardH - 28;
+    drawCard(weaponCardX, weaponCardY, weaponCardW, weaponCardH, 'rgba(15, 23, 42, 0.94)', '#334155', 8);
 
     const ammoIcon = assetLoader?.getImage('ammo_icon.png');
-    if (ammoIcon && ammoIcon.complete && ammoIcon.naturalWidth !== 0) {
-      ctx.drawImage(ammoIcon, weaponCardX + 10, weaponCardY + 12, 36, 36);
+    if (ammoIcon && ammoIcon.complete && ammoIcon.naturalWidth !== 0 && ctx.drawImage) {
+      ctx.drawImage(ammoIcon, weaponCardX + 14, weaponCardY + 16, 48, 48);
     }
 
-    // Weapon Name
-    ctx.textAlign = 'right';
-    ctx.textBaseline = 'top';
-    ctx.font = '900 14px sans-serif';
-    ctx.fillStyle = '#facc15';
-    ctx.fillText(data.weaponName, weaponCardX + weaponCardW - 14, weaponCardY + 10);
+    if (ctx.fillText) {
+      // Weapon Name
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'top';
+      ctx.font = '900 18px sans-serif';
+      ctx.fillStyle = '#facc15';
+      ctx.fillText(data.weaponName, weaponCardX + weaponCardW - 18, weaponCardY + 14);
 
-    // Ammo Count
-    ctx.font = 'bold 18px monospace';
-    ctx.fillStyle = '#ffffff';
-    ctx.fillText(`AMMO: ${data.ammoText}`, weaponCardX + weaponCardW - 14, weaponCardY + 30);
+      // Ammo Count
+      ctx.font = 'bold 22px monospace';
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText(`AMMO: ${data.ammoText}`, weaponCardX + weaponCardW - 18, weaponCardY + 40);
+    }
 
     // 5. RETICLE / CROSSHAIR (at Mouse position)
     if (mousePos) {
       const crosshair = assetLoader?.getImage('crosshair.png');
-      if (crosshair && crosshair.complete && crosshair.naturalWidth !== 0) {
-        ctx.drawImage(crosshair, mousePos.x - 16, mousePos.y - 16, 32, 32);
-      } else {
+      if (crosshair && crosshair.complete && crosshair.naturalWidth !== 0 && ctx.drawImage) {
+        ctx.drawImage(crosshair, mousePos.x - 20, mousePos.y - 20, 40, 40);
+      } else if (ctx.beginPath) {
         ctx.strokeStyle = '#22d3ee';
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.arc(mousePos.x, mousePos.y, 8, 0, Math.PI * 2);
-        ctx.moveTo(mousePos.x - 12, mousePos.y);
-        ctx.lineTo(mousePos.x + 12, mousePos.y);
-        ctx.moveTo(mousePos.x, mousePos.y - 12);
-        ctx.lineTo(mousePos.x, mousePos.y + 12);
-        ctx.stroke();
+        ctx.arc(mousePos.x, mousePos.y, 10, 0, Math.PI * 2);
+        ctx.moveTo(mousePos.x - 16, mousePos.y);
+        ctx.lineTo(mousePos.x + 16, mousePos.y);
+        ctx.moveTo(mousePos.x, mousePos.y - 16);
+        ctx.lineTo(mousePos.x, mousePos.y + 16);
+        if (ctx.stroke) ctx.stroke();
       }
     }
 
-    ctx.restore();
+    if (ctx.restore) ctx.restore();
   }
 }

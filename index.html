@@ -12,7 +12,7 @@
       user-select: none;
     }
     body {
-      background-color: #0f111a;
+      background-color: #0b0f19;
       color: #ffffff;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       display: flex;
@@ -24,10 +24,10 @@
     }
     #game-container {
       position: relative;
-      width: 800px;
-      max-width: 95vw;
-      max-height: 85vh;
-      aspect-ratio: 4 / 3;
+      width: 95vw;
+      max-width: 1920px;
+      max-height: 88vh;
+      aspect-ratio: 16 / 9;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 200, 255, 0.2);
       border-radius: 8px;
       overflow: hidden;
@@ -37,22 +37,22 @@
       display: block;
       width: 100%;
       height: 100%;
-      background-color: #12141d;
+      background-color: #0b0f19;
       cursor: crosshair;
     }
     .instructions {
-      margin-top: 14px;
+      margin-top: 10px;
       color: #8f9ba8;
       font-size: 13px;
       text-align: center;
       line-height: 1.5;
     }
     .instructions kbd {
-      background-color: #242938;
+      background-color: #1e293b;
       color: #e2e8f0;
       padding: 2px 6px;
       border-radius: 4px;
-      border: 1px solid #3b4256;
+      border: 1px solid #334155;
       font-family: monospace;
       font-size: 12px;
     }
@@ -60,10 +60,10 @@
 </head>
 <body>
   <div id="game-container">
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <canvas id="gameCanvas" width="1920" height="1080"></canvas>
   </div>
   <div class="instructions">
-    Movement: <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> or <kbd>Arrow Keys</kbd> &nbsp;|&nbsp; Aim: <kbd>Mouse</kbd> &nbsp;|&nbsp; Fire: <kbd>Left Click</kbd> &nbsp;|&nbsp; Start/Restart: <kbd>Space</kbd> / <kbd>Click</kbd>
+    Movement: <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> or <kbd>Arrow Keys</kbd> &nbsp;|&nbsp; Aim: <kbd>Mouse</kbd> &nbsp;|&nbsp; Fire: <kbd>Left Click</kbd> &nbsp;|&nbsp; Switch: <kbd>1</kbd>/<kbd>2</kbd> &nbsp;|&nbsp; Reload: <kbd>R</kbd> &nbsp;|&nbsp; Start/Restart: <kbd>Space</kbd> / <kbd>Click</kbd>
   </div>
   <script type="module" src="./src/main.js"></script>
 </body>

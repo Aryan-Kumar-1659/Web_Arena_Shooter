@@ -197,40 +197,47 @@ export class GameLoop {
     ctx.fillStyle = '#0b0f19';
     ctx.fillRect(0, 0, width, height);
 
-    // 2. Subtle sci-fi grid
-    ctx.strokeStyle = '#1e293b';
-    ctx.lineWidth = 1;
-    const gridSize = 40;
-
-    ctx.beginPath();
-    for (let x = 0; x <= width; x += gridSize) {
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, height);
-    }
-    for (let y = 0; y <= height; y += gridSize) {
-      ctx.moveTo(0, y);
-      ctx.lineTo(width, y);
-    }
-    ctx.stroke();
-
-    // 3. Optional arena floor texture
+    // 2. Tile the background image from assets as a repeating grid
+    let floorTiled = false;
     if (this.assetLoader && typeof this.assetLoader.getImage === 'function') {
       const floorImg = this.assetLoader.getImage('arena_floor.png');
       if (floorImg && floorImg.complete && floorImg.naturalWidth > 0) {
-        ctx.save();
-        ctx.globalAlpha = 0.85;
-        ctx.drawImage(floorImg, 0, 0, width, height);
-        ctx.restore();
+        const tileW = 240;
+        const tileH = 240;
+        for (let x = 0; x < width; x += tileW) {
+          for (let y = 0; y < height; y += tileH) {
+            ctx.drawImage(floorImg, x, y, tileW, tileH);
+          }
+        }
+        floorTiled = true;
       }
+    }
+
+    // 3. Fallback subtle sci-fi grid if image is missing
+    if (!floorTiled) {
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1;
+      const gridSize = 60;
+
+      ctx.beginPath();
+      for (let x = 0; x <= width; x += gridSize) {
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+      }
+      for (let y = 0; y <= height; y += gridSize) {
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+      }
+      ctx.stroke();
     }
 
     // 4. Arena boundary walls with sleek glowing border
     ctx.save();
-    ctx.lineWidth = 4;
+    ctx.lineWidth = 6;
     ctx.strokeStyle = '#0284c7';
-    ctx.shadowColor = 'rgba(2, 132, 199, 0.4)';
-    ctx.shadowBlur = 8;
-    ctx.strokeRect(2, 2, width - 4, height - 4);
+    ctx.shadowColor = 'rgba(2, 132, 199, 0.5)';
+    ctx.shadowBlur = 12;
+    ctx.strokeRect(3, 3, width - 6, height - 6);
     ctx.restore();
   }
 
